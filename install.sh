@@ -11,7 +11,6 @@ if [ -f ~/.vimrc ]
 fi
 ln -s $(pwd)/vimrc .vimrc
 mv .vimrc ~/
-
 echo '.vimrc symlinked'
 
 if [ -f ~/.bash_profile ]
@@ -21,6 +20,16 @@ if [ -f ~/.bash_profile ]
 fi
 ln -s $(pwd)/bash_profile .bash_profile
 mv .bash_profile ~/
+echo '.bash_profile symlinked'
+
+if [ -f ~/.gitconfig ]
+	then
+		echo 'gitconfig found, saving as .gitconfig.bkup'
+		mv ~/.gitconfig ~/.gitconfig.bkup
+fi
+ln -s $(pwd)/gitconfig .gitconfig
+mv .bash_profile ~/
+echo '.gitconfig symlinked'
 
 echo 
 echo 'done!'
