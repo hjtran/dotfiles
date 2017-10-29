@@ -1,26 +1,20 @@
 # Author: Hai Joey Tran
-# bash settings to be used across my systems
+# Common settings for all systems and environments
+
+# include ~/bin for personal scripts
+export PATH=~/bin:$PATH
+
+# Load common aliases
+dotfiles=~/repo/dotfiles
+source $dotfiles'/alias/common.sh'
+
+# shell prompt
+function parse_git_branch {
+git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
+}
+export PS1="\[\033[01;32m\]\w \[\033[01;34m\]\[\033[01;34m\]\$(parse_git_branch) > \[\e[0m\]"
 
 # source .bashrc for system specific settings
 if [ -f ~/.bashrc ]; then
 	source ~/.bashrc
 fi
-
-# vim-like aliases
-alias :x='exit'
-alias :q='exit'
-
-# line count
-alias lc='wc -l '
-
-# colored ls
-alias ls='ls -G'
-
-# include ~/bin for personal binary files
-export PATH=~/bin:$PATH
-
-# set bash prompt text (before commands)
-PS1='\H:\w $ '
-
-# added by Anaconda3 4.4.0 installer
-export PATH="/Users/joey/anaconda3/bin:$PATH"

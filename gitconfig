@@ -1,0 +1,17 @@
+# This is Git's per-user configuration file.
+[user]
+# Please adapt and uncomment the following lines:
+	name = Joey Tran
+    email = joey.tran@schrodinger.com
+[core]
+    editor = /usr/bin/vim
+[alias]
+	co = checkout
+	br = branch
+	ct = commit
+	st = status
+	unstage = reset HEAD --
+	last = log -1 HEAD
+	mylog = log --author=Joey
+	cram = commit -a --amend --no-edit
+	pop = stash pop
