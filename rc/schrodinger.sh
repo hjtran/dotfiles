@@ -1,22 +1,6 @@
 ### Bash settings for schrodinger development
 
-# Set variables
-SCHRODINGER=/scr/jtran/builds/2017-4/build; export SCHRODINGER; SCHRODINGER_SRC=/scr/jtran/builds/2017-4/source; export SCHRODINGER_SRC; SCHRODINGER_LIB=/software/lib; export SCHRODINGER_LIB
-ds=$SCHRODINGER_SRC
-dmsv=$SCHRODINGER_SRC'/mmshare/python/modules/schrodinger/application/msv'
-dschr=$SCHRODINGER_SRC'/mmshare/python/modules/schrodinger'
-dgui=$dmsv'/gui'
-dprot=$dschr'/protein'
-dt=$SCHRODINGER_SRC'/mmshare/python/test'
-dtprot=$dt'/protein/'
-dtmsv=$dt'/application/msv/'
-dtgui=$dt'/application/msv/gui'
-
-# Load aliases
-source $dotfiles'/alias/schrodinger.sh'
-
-
-### Functions
+############## Functions
 rbt () {
     ## Function for saving rbt ids for branches so I don't have to type in
     ## rbt -r and remember what number the review was.
@@ -38,3 +22,34 @@ testdinger () {
     make unittest TEST_ARGS="$1"
     cd -
 }
+
+set_schrodinger_v () {
+    SCHRODINGER=/scr/jtran/builds/$1/build
+    export SCHRODINGER
+    SCHRODINGER_SRC=/scr/jtran/builds/$1/source
+    export SCHRODINGER_SRC
+    SCHRODINGER_LIB=/software/lib
+    export SCHRODINGER_LIB
+}
+
+schrodinger_env () {
+    echo '$SCHRODINGER: '$SCHRODINGER
+    echo '$SCHRODINGER_SRC: '$SCHRODINGER_SRC
+}
+
+############## Environment Setup
+# Set variables
+set_schrodinger_v 2017-4
+ds=$SCHRODINGER_SRC
+dmsv=$SCHRODINGER_SRC'/mmshare/python/modules/schrodinger/application/msv'
+dschr=$SCHRODINGER_SRC'/mmshare/python/modules/schrodinger'
+dgui=$dmsv'/gui'
+dprot=$dschr'/protein'
+dt=$SCHRODINGER_SRC'/mmshare/python/test'
+dtprot=$dt'/protein/'
+dtmsv=$dt'/application/msv/'
+dtgui=$dt'/application/msv/gui'
+
+# Load aliases
+source $dotfiles'/alias/schrodinger.sh'
+
