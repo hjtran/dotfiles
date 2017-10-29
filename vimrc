@@ -56,6 +56,9 @@ autocmd FileType python nnoremap <Leader>r :w<CR>:! python %<CR>
 autocmd FileType python nnoremap <Leader>s :! python<CR>
 nnoremap <Leader>n :bnext<CR>
 nnoremap <Leader>m :bprevious<CR>
+nnoremap <Leader>d :pu =CreateSphinxStub()<CR>
+nnoremap <Leader>f :call append(line('.'), CreateSphinxStub())<CR>
+" Bindings for moving between splits
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
@@ -63,7 +66,7 @@ nnoremap <C-H> <C-W><C-H>
 " These bindings require plugins
 nnoremap <Leader>c :Gcommit -a<CR>
 nnoremap <Leader>e :ProjectFiles<CR>
-command! ProjectFiles execute 'FZF' s:find_git_root()
+command! ProjectFiles execute 'FZF' s:FindGitRoot()
 
 """ Rebindings
 " W and Q do the same as w and q
@@ -94,6 +97,38 @@ let g:airline#extensions#tabline#enabled = 1
 
 
 """ Functions
-function! s:find_git_root()
-  return system('git rev-parse --show-toplevel 2> /dev/null')[:-2]
+function! FindGitRoot()
+    return system('git rev-parse --show-toplevel 2> /dev/null')[:-2]
+endfunction
+
+function! ParseArgs()
+    let signature=getline('.')
+    let signature=substitute(signature,'^.*(','','')
+    let signature=substitute(signature,').*$','','')
+    let raw_args=split(signature,',')
+    let special_words=['self','*args','**kwargs']
+    let args=[]
+    for arg in raw_args
+        if (index(special_words,arg) == -1)
+            let arg=substitute(arg,' ','','')
+            let arg=substitute(arg,'=.*$','','')
+            call add(args, arg)
+        endif
+    endfor
+    return args
+endfunction
+
+function! CreateSphinxStub()
+    let spaces=repeat(' ',indent('.')+4)
+    let args=ParseArgs()
+    let docstr=[spaces.'"""']
+    for arg in args
+        call add(docstr,spaces.':param '.arg.': ')
+        call add(docstr,spaces.':type  '.arg.': ')
+        call add(docstr,spaces.'')
+    endfor
+    call add(docstr,spaces.'return: ')
+    call add(docstr,spaces.'rtype : ')
+    call add(docstr,spaces.'"""')
+    return docstr
 endfunction
