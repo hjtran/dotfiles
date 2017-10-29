@@ -79,6 +79,8 @@ nnoremap $ <nop>
 " move vertically by visual line
 nnoremap j gj
 nnoremap k gk
+" disable shift-k
+map <S-k> <Nop>
 
 """ Plugin settings
 " syntastic settings
