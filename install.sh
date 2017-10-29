@@ -4,42 +4,20 @@
 # Run from script dir
 
 echo 'making symlinks of dotfiles...'
-if [ -f ~/.vimrc ]
-	then
-		echo 'vimrc found, saving as .vimrc.bkup'
-		mv ~/.vimrc ~/.vimrc.bkup
-fi
-ln -s $(pwd)/vimrc .vimrc
-mv .vimrc ~/
-echo '.vimrc symlinked'
-
-if [ -f ~/.bash_profile ]
-	then
-		echo 'bash_profile found, saving as .bash_profile.bkup'
-		mv ~/.bash_profile ~/.bash_profile.bkup
-fi
-ln -s $(pwd)/bash_profile .bash_profile
-mv .bash_profile ~/
-echo '.bash_profile symlinked'
-
-if [ -f ~/.gitconfig ]
-	then
-		echo 'gitconfig found, saving as .gitconfig.bkup'
-		mv ~/.gitconfig ~/.gitconfig.bkup
-fi
-ln -s $(pwd)/gitconfig .gitconfig
-mv .bash_profile ~/
-echo '.gitconfig symlinked'
-
-if [ -f ~/.tmux.conf ]
-	then
-		echo 'tmux.conf found, saving as .gitconfig.bkup'
-		mv ~/.tmux.conf ~/.tmux.conf.bkup
-fi
-ln -s $(pwd)/tmux.conf .tmux.conf
-mv .tmux.conf ~/
-echo '.tmux.conf symlinked'
-
+echo
+make_sym () {
+    if [ -f ~/.$1 ]
+        then
+            echo $1' found, saving as .'$1'.bkup'
+            mv '~/.'$1 '~/.'$1'.bkup'
+    fi
+    ln -s $(pwd)/$1 .$1
+    mv .$1 ~/
+    echo '.'$1' symlinked'
+}
+for f in 'vimrc' 'bash_profile' 'gitconfig' 'tmux.conf'; do
+    make_sym $f
+done
 echo 
 echo 'done!'
 
