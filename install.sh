@@ -31,6 +31,15 @@ ln -s $(pwd)/gitconfig .gitconfig
 mv .bash_profile ~/
 echo '.gitconfig symlinked'
 
+if [ -f ~/.tmux.conf ]
+	then
+		echo 'tmux.conf found, saving as .gitconfig.bkup'
+		mv ~/.tmux.conf ~/.tmux.conf.bkup
+fi
+ln -s $(pwd)/tmux.conf .tmux.conf
+mv .tmux.conf ~/
+echo '.tmux.conf symlinked'
+
 echo 
 echo 'done!'
 
