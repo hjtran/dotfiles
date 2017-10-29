@@ -56,8 +56,7 @@ autocmd FileType python nnoremap <Leader>r :w<CR>:! python %<CR>
 autocmd FileType python nnoremap <Leader>s :! python<CR>
 nnoremap <Leader>n :bnext<CR>
 nnoremap <Leader>m :bprevious<CR>
-nnoremap <Leader>d :pu =CreateSphinxStub()<CR>
-nnoremap <Leader>f :call append(line('.'), CreateSphinxStub())<CR>
+nnoremap <Leader>d :call append(line('.'), CreateSphinxStub())<CR>
 " Bindings for moving between splits
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
