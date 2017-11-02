@@ -133,10 +133,10 @@ function! CreateSphinxStub()
     for arg in args
         call add(docstr,spaces.':param '.arg.': ')
         call add(docstr,spaces.':type  '.arg.': ')
-        call add(docstr,spaces.'')
+        call add(docstr,'')
     endfor
-    call add(docstr,spaces.'return: ')
-    call add(docstr,spaces.'rtype : ')
+    call add(docstr,spaces.':return: ')
+    call add(docstr,spaces.':rtype : ')
     call add(docstr,spaces.'"""')
     return docstr
 endfunction
