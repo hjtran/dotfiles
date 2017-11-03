@@ -1,9 +1,10 @@
 """ hjtran vimrc
-
-""" General settings
+""" General settings {{{
 " :e opens a new buffer without closing the current buffer
 set hidden
-" tabcomplete
+" for setting folding for my vimrc
+set modelines=1
+" tabcomplete for opening files
 set wildmode=longest,list,full
 set wildmenu
 " make vim distro-independent
@@ -25,43 +26,43 @@ set laststatus=2
 set confirm
 " Set search to move term into middle of screen
 set so=7
-" open to line the file was closed on
-if has("autocmd")
-  au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
-    \| exe "normal! g'\"" | endif
-endif
+" Enable Pathogen plugin manager
+execute pathogen#infect()
+" Add _ as word boundary
+set iskeyword-=_
+" }}}
+""" Autocommands {{{
+" visual line to show where python lines should end
+autocmd FileType python setlocal cc=80
+" open to line the file was closed on by using '\' as a mark
+autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
+\| exe "normal! g'\"" | endif
 " Unlist quickfix buffers so we dont cycle through them
 augroup qf
     autocmd!
     autocmd FileType qf set nobuflisted
 augroup END
-" Enable Pathogen plugin manager
-execute pathogen#infect()
-" Add _ as word boundary
-set iskeyword-=_
-" visual line to show where python lines should end
-autocmd FileType python setlocal cc=80
-
-""" Indentation Options
+" }}}
+""" Indentation Options {{{
 set shiftwidth=4
 set tabstop=4
 set softtabstop=4
 set expandtab
 set backspace=indent,eol,start
-
-""" Text expansions
+" }}}
+""" Text expansions {{{
 iab pydb import pdb; pdb.set_trace()
 iab qtpdb import pdb; from schrodinger.Qt import QtCore; QtCore.pyqtRemoveInputHook(); pdb.set_trace()
 iab impph from schrodinger.profilehooks import profile, timecall
-
-""" Commands
+""" }}}
+""" Commands {{{
 command! ProjectFiles execute 'FZF' s:FindGitRoot()
 command! FZFPyDefs call fzf#run({
                     \'down':'40%',
                     \'source': PyDefs(),
                     \'sink': function('JumpTo')})
-
-""" Keybindings
+" }}}
+""" Keybindings {{{
 let mapleader=","
 nnoremap <C-t> :tabnew<CR>
 autocmd FileType python nnoremap <Leader>r :w<CR>:! python %<CR>
@@ -78,23 +79,29 @@ nnoremap <C-H> <C-W><C-H>
 nnoremap <Leader>c :Gcommit -a<CR>
 nnoremap <Leader>e :ProjectFiles<CR>
 nnoremap <Leader>j :FZFPyDefs<CR>
+" }}}
+""" Rebindings {{{
 
-""" Rebindings
-" W and Q do the same as w and q
+" Set W and Q to do the same as w and q
 command W w
 command Q q
-" rebind ^ and $ to 0 and W
+
+" rebind ^ and $ to E and W
 nnoremap B ^
 nnoremap E $
 nnoremap ^ <nop>
 nnoremap $ <nop>
+
 " move vertically by visual line
 nnoremap j gj
 nnoremap k gk
+
 " disable shift-k
 map <S-k> <Nop>
 
-""" Plugin settings
+"}}}
+""" Plugin settings {{{
+
 " syntastic settings
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
@@ -104,12 +111,14 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_python_checkers = ['pyflakes']
+
 " airline settings
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 
+" }}}}
+""" Functions{{{
 
-""" Functions
 function! s:FindGitRoot()
     return system('git rev-parse --show-toplevel 2> /dev/null')[:-2]
 endfunction
@@ -190,3 +199,6 @@ function! PyDefs()
     endfor
     return defs
 endfun
+
+" }}}
+" vim:foldmethod=marker:foldlevel=0
