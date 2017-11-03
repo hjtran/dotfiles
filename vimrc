@@ -96,8 +96,12 @@ nnoremap $ <nop>
 nnoremap j gj
 nnoremap k gk
 
-" disable shift-k
+" disable annoying keybindings
 map <S-k> <Nop>
+" Have to use this b/c vim really doesnt want you to 
+" remap X. This has the side effect of changing all single
+" 'X' on vim cmd line to lowercase 'x'
+cnoreabbrev X x
 
 "}}}
 """ Plugin settings {{{
