@@ -117,10 +117,25 @@ let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 
 " }}}}
+""" Schrodinger settings {{{
+if !empty($SCHRODINGER_SRC)
+    function OpenGrokFile()
+        let fname=expand('%:p')
+        let fname=substitute(fname,$SCHRODINGER_SRC.'/','','')
+        execute '! /usr/bin/open -a "/Applications/Google Chrome.app" "http://opengrok/xref/"'.fname.'\#'.line('.')
+    endfunction
+    command OpenGrok call OpenGrokFile()
+    nnoremap <Leader>o :silent OpenGrok<CR>:redraw!<CR>
+endif
+" }}}
 """ Functions{{{
 
 function! s:FindGitRoot()
     return system('git rev-parse --show-toplevel 2> /dev/null')[:-2]
+endfunction
+
+function! s:GetRepoName()
+    return system('basename `git rev-parse --show-toplevel`')
 endfunction
 
 function! ParseArgs()
