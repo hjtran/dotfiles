@@ -32,6 +32,7 @@ execute pathogen#infect()
 set iskeyword-=_
 " }}}
 """ Autocommands {{{
+
 " visual line to show where python lines should end
 autocmd FileType python setlocal cc=80
 " open to line the file was closed on by using '\' as a mark
@@ -42,6 +43,13 @@ augroup qf
     autocmd!
     autocmd FileType qf set nobuflisted
 augroup END
+
+" Highlight trailing whitespace
+highlight ExtraWhitespace ctermbg=darkgreen guibg=darkgreen
+augroup TrailingWhitespace
+    au InsertLeave * match ExtraWhitespace /\s\+$/
+augroup END
+
 " }}}
 """ Indentation Options {{{
 set shiftwidth=4
