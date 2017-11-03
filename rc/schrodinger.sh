@@ -8,7 +8,7 @@ rbt () {
     branch=$(git branch | grep \* | cut -d ' ' -f2)
     rbt_id=$(grep "$repo:$branch" ~/.rbtids | cut -d":" -f3)
     if [ -z "$rbt_id" ]; then
-        rbt_id=$(/usr/local/bin/rbt post | tee /dev/tty | egrep -o '[0-9]+' | head -1)
+        rbt_id=$(/usr/local/bin/rbt post --open --bugs-closed $branch --summary $branch: | tee /dev/tty | egrep -o '[0-9]+' | head -1)
         echo -e "$repo:$branch:$rbt_id\n" >> ~/.rbtids
     else
         /usr/local/bin/rbt post -r $rbt_id
@@ -32,14 +32,14 @@ set_schrodinger_v () {
     export SCHRODINGER_LIB
 }
 
-schrodinger_env () {
+schrodinger_v () {
     echo '$SCHRODINGER: '$SCHRODINGER
     echo '$SCHRODINGER_SRC: '$SCHRODINGER_SRC
 }
 
 ############## Environment Setup
 # Set variables
-set_schrodinger_v 2017-4
+set_schrodinger_v 2018-1
 ds=$SCHRODINGER_SRC
 dmsv=$SCHRODINGER_SRC'/mmshare/python/modules/schrodinger/application/msv'
 dschr=$SCHRODINGER_SRC'/mmshare/python/modules/schrodinger'
