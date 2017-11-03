@@ -30,6 +30,11 @@ if has("autocmd")
   au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
     \| exe "normal! g'\"" | endif
 endif
+" Unlist quickfix buffers so we dont cycle through them
+augroup qf
+    autocmd!
+    autocmd FileType qf set nobuflisted
+augroup END
 " Enable Pathogen plugin manager
 execute pathogen#infect()
 " Add _ as word boundary
