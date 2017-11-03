@@ -22,6 +22,7 @@ alias schropy='$SCHRODINGER/run'
 alias runsnake='/usr/bin/python ~/bin/runsnake.py'
 alias pmsv='rm myprof.prof ; msv && runsnake myprof.prof'
 alias g='git'
+alias td='testdinger'
 export PATH=$PATH:~/repo/work_scripts/
 alias test_targs='build_modules && cd $SCHRODINGER/mmshare*/python/test ; make unittest TEST_ARGS="$targs" ; cd -'
 
