@@ -100,6 +100,9 @@ nnoremap E $
 nnoremap ^ <nop>
 nnoremap $ <nop>
 
+" rebind 
+nnoremap Y y$
+
 " move vertically by visual line
 nnoremap j gj
 nnoremap k gk
@@ -110,6 +113,18 @@ map <S-k> <Nop>
 " remap X. This has the side effect of changing all single
 " 'X' on vim cmd line to lowercase 'x'
 cnoreabbrev X x
+
+" Jedi rebindings
+let g:jedi#goto_command = ""
+let g:jedi#goto_assignments_command = ""
+let g:jedi#goto_definitions_command = ""
+let g:jedi#documentation_command = ""
+let g:jedi#usages_command = ""
+let g:jedi#completions_command = "<C-Space>"
+let g:jedi#rename_command = ""
+
+" Easy Motion rebinding
+nmap <Space> <Plug>(easymotion-prefix)
 
 "}}}
 """ Plugin settings {{{
@@ -155,7 +170,7 @@ function! ParseArgs()
     let signature=substitute(signature,'^.*(','','')
     let signature=substitute(signature,').*$','','')
     let raw_args=split(signature,',')
-    let special_words=['self','*args','**kwargs']
+    let special_words=['cls','self','*args','**kwargs']
     let args=[]
     for arg in raw_args
         if (index(special_words,arg) == -1)
