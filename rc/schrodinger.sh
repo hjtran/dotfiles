@@ -94,8 +94,9 @@ testdinger () {
         echo "No tests specified."
     else
         cd $SCHRODINGER/mmshare*/python/test
-        failed_tests=$(script -q /dev/null \                            # script allows color from a tee input
-                        make unittest TEST_ARGS="$(echo $test_args)" |  # run the tests
+        # 'script' used to keep colors in stdout, otherwise the pipe will take the colors out.
+        # Would split over two lines but script doesn't work that way for some reason?
+        failed_tests=$(script -q /dev/null make unittest TEST_ARGS="$(echo $test_args)" |  # run the tests
                         tee /dev/tty                                 |  # split stdout and feed it into egrep
                         egrep -o '[A-Za-z][^ ]+::[^ ]+::[^ ]+'       |  # grep failing tests
                         sort -u)                                        # delete duplicates
