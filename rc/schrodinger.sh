@@ -43,25 +43,46 @@ source $dotfiles'/alias/schrodinger.sh'
 
 ############## General Functions
 testdinger () {
-    ## Function to run unit tests
+    ###
+    # Function to run unit tests with FZF integration for choosing tests.
+    # Currently only supports tests found in python/test, not tests in scripts/test
+    #
+    # Example usage:
+    # testdinger -f
+    # testdinger -f -n '--verbose'
+    #
+    ###
+
+    # Local variables
     start_dir=$PWD
-    ## Default, run failed tests from last run
+    OPTIND=1
+    test_args=''
+    # Default, run failed tests from last run
     test_args=$failed_tests
+    unset failed_tests
+    # Load newest changes in python code
     build_modules
+
+    # Parse flags. Normal mode can be used with other flags
+    # as long as the -n flag is passed last.
     while getopts "fdrn:" opt; do
       case $opt in
         f)
+            # Test [f]ile mode
             cd $SCHRODINGER_SRC/mmshare/python/test
             test_args=$(find . -name "*.py" | sed 's/\.\///g' | fzf)
           ;;
         d)
+            # Test [d]irectory mode
             cd $SCHRODINGER_SRC/mmshare/python/test
             test_args=$(find . -type d | sed 's/\.\///g' | fzf)
           ;;
         n)
-            test_args=$OPTARG
+            # [n]ormal mode. Just passes in arguments to make unittest
+            test_args="$test_args $OPTARG"
           ;;
         r)
+            # [r]epeat mode. Use arguments from previous run.
             test_args=$old_test_args
         ;;
         \?)
@@ -69,11 +90,18 @@ testdinger () {
           ;;
       esac
     done
-    cd $SCHRODINGER/mmshare*/python/test
-    failed_tests=$(script -q /dev/null make unittest TEST_ARGS="$(echo $test_args)" | tee /dev/tty | egrep -o '[A-Za-z][^ ]+::[^ ]+::[^ ]+')
-    old_test_args=$test_args
+    if [ -z $test_args ]; then
+        echo "No tests specified."
+    else
+        cd $SCHRODINGER/mmshare*/python/test
+        failed_tests=$(script -q /dev/null \                            # script allows color from a tee input
+                        make unittest TEST_ARGS="$(echo $test_args)" |  # run the tests
+                        tee /dev/tty                                 |  # split stdout and feed it into egrep
+                        egrep -o '[A-Za-z][^ ]+::[^ ]+::[^ ]+'       |  # grep failing tests
+                        sort -u)                                        # delete duplicates
+        old_test_args=$test_args
+    fi
     cd $start_dir
-    unset OPTIND
 }
 
 rbt () {
@@ -89,3 +117,6 @@ rbt () {
         /usr/local/bin/rbt post -r $rbt_id
     fi
 }
+
+alias build_scripts='cd $SCHRODINGER/mmshare-v*/python/scripts/ && make install ; cd -'
+alias pstu='build_scripts && $SCHRODINGER/utilities/py.test $SCHRODINGER/mmshare-v*/python/scripts/test/params_stu'
