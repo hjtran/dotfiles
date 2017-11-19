@@ -59,8 +59,8 @@ set expandtab
 set backspace=indent,eol,start
 " }}}
 """ Text expansions {{{
-iab pydb import pdb; pdb.set_trace()
-iab qtpdb import pdb; from schrodinger.Qt import QtCore; QtCore.pyqtRemoveInputHook(); pdb.set_trace()
+iab pydb import pdb; pdb.set_trace(); pdb.set_trace = lambda: None
+iab qtpdb import pdb; from schrodinger.Qt import QtCore; QtCore.pyqtRemoveInputHook(); pdb.set_trace(); pdb.set_trace = lambda: None
 iab impph from schrodinger.profilehooks import profile, timecall
 """ }}}
 """ Commands {{{
