@@ -29,7 +29,7 @@ set so=7
 " Enable Pathogen plugin manager
 execute pathogen#infect()
 " Add _ as word boundary
-set iskeyword-=_
+"set iskeyword-=_
 " }}}
 """ Autocommands {{{
 
@@ -48,6 +48,11 @@ augroup END
 highlight ExtraWhitespace ctermbg=darkgreen guibg=darkgreen
 augroup TrailingWhitespace
     au InsertLeave * match ExtraWhitespace /\s\+$/
+augroup END
+highlight SphinxParams ctermfg=cyan guifg=#00ffff
+augroup SphinxWords
+    au BufWrite * match SphinxParams /\s\+:param/
+    au BufRead * match SphinxParams /\s\+:param/
 augroup END
 
 " }}}
@@ -69,6 +74,7 @@ command! FZFPyDefs call fzf#run({
                     \'down':'40%',
                     \'source': PyDefs(),
                     \'sink': function('JumpTo')})
+command! Reload source $MYVIMRC
 " }}}
 """ Keybindings {{{
 let mapleader=","
@@ -91,8 +97,8 @@ nnoremap <Leader>j :FZFPyDefs<CR>
 """ Rebindings {{{
 
 " Set W and Q to do the same as w and q
-command W w
-command Q q
+command! W w
+command! Q q
 
 " rebind ^ and $ to E and W
 nnoremap B ^
@@ -143,15 +149,21 @@ let g:syntastic_python_checkers = ['pyflakes']
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 
+" jedi settings
+"autocmd FileType python setlocal completeopt-=preview
+"let g:jedi#smart_auto_mappings = 0
+
+let g:completor_python_binary='/scr/jtran/builds/2018-1/build/buildvenv/279714d/bin/python'
+
 " }}}}
 """ Schrodinger settings {{{
 if !empty($SCHRODINGER_SRC)
-    function OpenGrokFile()
+    function! OpenGrokFile()
         let fname=expand('%:p')
         let fname=substitute(fname,$SCHRODINGER_SRC.'/','','')
         execute '! /usr/bin/open -a "/Applications/Google Chrome.app" "http://opengrok/xref/"'.fname.'\#'.line('.')
     endfunction
-    command OpenGrok call OpenGrokFile()
+    command! OpenGrok call OpenGrokFile()
     nnoremap <Leader>o :silent OpenGrok<CR>:redraw!<CR>
 endif
 " }}}
