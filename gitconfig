@@ -15,7 +15,9 @@
 	mylog = log --author=Joey
 	cram = commit -a --amend --no-edit
 	pop = stash pop
-	d = difftool
+    d = difftool
+    diffname = diff --name-only
+    squash = merge --squash
 [diff]
 	tool = vimdiff
 [difftool]
