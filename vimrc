@@ -28,8 +28,9 @@ set confirm
 set so=7
 " Enable Pathogen plugin manager
 execute pathogen#infect()
-" Add _ as word boundary
-"set iskeyword-=_
+" Stop {} from adding to the jumplist
+nnoremap <silent> } :<C-u>execute "keepjumps norm! " . v:count1 . "}"<CR>
+nnoremap <silent> { :<C-u>execute "keepjumps norm! " . v:count1 . "{"<CR>
 " }}}
 """ Autocommands {{{
 
@@ -49,11 +50,12 @@ highlight ExtraWhitespace ctermbg=darkgreen guibg=darkgreen
 augroup TrailingWhitespace
     au InsertLeave * match ExtraWhitespace /\s\+$/
 augroup END
-highlight SphinxParams ctermfg=cyan guifg=#00ffff
-augroup SphinxWords
-    au BufWrite * match SphinxParams /\s\+:param/
-    au BufRead * match SphinxParams /\s\+:param/
-augroup END
+
+"highlight SphinxParams ctermfg=red guifg=#00ffff
+"augroup SphinxWords
+    "au BufWrite * match SphinxParams /\s\+:param/
+    "au BufRead * match SphinxParams /\s\+:param/
+"augroup END
 
 " }}}
 """ Indentation Options {{{
@@ -67,6 +69,12 @@ set backspace=indent,eol,start
 iab pydb import pdb; pdb.set_trace(); pdb.set_trace = lambda: None
 iab qtpdb import pdb; from schrodinger.Qt import QtCore; QtCore.pyqtRemoveInputHook(); pdb.set_trace(); pdb.set_trace = lambda: None
 iab impph from schrodinger.profilehooks import profile, timecall
+iab ##### ################################################################################
+
+" Common mispellings
+iab FAlse False
+iab TRue True
+iab RunetimeError RuntimeError
 """ }}}
 """ Commands {{{
 command! ProjectFiles execute 'FZF' s:FindGitRoot()
@@ -78,7 +86,7 @@ command! Reload source $MYVIMRC
 " }}}
 """ Keybindings {{{
 let mapleader=","
-nnoremap <C-t> :tabnew<CR>
+nnoremap <C-t> :tabnew<CR>:Startify<CR>
 autocmd FileType python nnoremap <Leader>r :w<CR>:! python %<CR>
 autocmd FileType python nnoremap <Leader>s :! python<CR>
 nnoremap <Leader>n :bnext<CR>
@@ -89,6 +97,8 @@ nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
+" Binding to find and replace word under corsor
+nnoremap <Leader>S :%s/\<<C-r><C-w>\>/
 " These bindings require plugins
 nnoremap <Leader>c :Gcommit -a<CR>
 nnoremap <Leader>e :ProjectFiles<CR>
@@ -144,16 +154,18 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_python_checkers = ['pyflakes']
+let g:syntastic_python_pyflakes_exec = 'python3'
+let g:syntastic_python_pyflakes_args = ['-m', 'pyflakes']
 
 " airline settings
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 
 " jedi settings
-"autocmd FileType python setlocal completeopt-=preview
-"let g:jedi#smart_auto_mappings = 0
+autocmd FileType python setlocal completeopt-=preview
+let g:jedi#smart_auto_mappings = 0
 
-let g:completor_python_binary='/scr/jtran/builds/2018-1/build/buildvenv/279714d/bin/python'
+"let g:completor_python_binary='/scr/jtran/builds/2018-1/build/buildvenv/279714d/bin/python'
 
 " }}}}
 """ Schrodinger settings {{{
