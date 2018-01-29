@@ -2,10 +2,10 @@
 
 ############## Environment Setup Functions
 set_schrodinger_v () {
-    SCHRODINGER=/scr/jtran/builds/$1/build
-    export SCHRODINGER
     SCHRODINGER_SRC=/scr/jtran/builds/$1/source
     export SCHRODINGER_SRC
+    SCHRODINGER=/scr/jtran/builds/$1/build
+    export SCHRODINGER
     SCHRODINGER_LIB=/software/lib
     export SCHRODINGER_LIB
 }
@@ -15,18 +15,14 @@ schrodinger_v () {
     echo '$SCHRODINGER_SRC: '$SCHRODINGER_SRC
 }
 
-schropy3 () {
-    export SCHRODINGER_PYTHON3=true
-    export SCHRODINGER=/scr/jtran/builds/2018-1py3/build
-}
-schropy2 () {
+unset_py3 () {
+    unset PYTHONPATH
     unset SCHRODINGER_PYTHON3
-    export SCHRODINGER=/scr/jtran/builds/2018-1/build
 }
 
 ############## Environment Setup
 # Set variables
-set_schrodinger_v 2018-1
+set_schrodinger_v 2018-2
 ds=$SCHRODINGER_SRC
 dmsv=$SCHRODINGER_SRC'/mmshare/python/modules/schrodinger/application/msv'
 dschr=$SCHRODINGER_SRC'/mmshare/python/modules/schrodinger'
@@ -119,5 +115,29 @@ rbt () {
     fi
 }
 
+OB () {
+    /Volumes/builds/OB/20$1/build$2/MacOSX/maestro $3
+}
+OBls () {
+    ls /Volumes/builds/OB/20$1
+}
+
+oyapf () {
+    if [ $# -eq 0 ]; then
+        g diff master --name-only | xargs yapf -i && g ct -a -m 'yapf'
+      else
+        g diff $1 --name-only | xargs yapf -i && g ct -a -m 'yapf'
+    fi
+}
+
+
+
 alias build_scripts='cd $SCHRODINGER/mmshare-v*/python/scripts/ && make install ; cd -'
 alias pstu='build_scripts && $SCHRODINGER/utilities/py.test $SCHRODINGER/mmshare-v*/python/scripts/test/params_stu'
+alias bashrc='vim ~/.bashrc'
+alias vimrc='vim ~/.vimrc'
+alias bash_profile='vim ~/.bash_profile'
+alias reload='source ~/.bashrc'
+
+export SCHRODINGER_PYTHON3='TRUE'
+export PYTHONPATH=$SCHRODINGER'/internal/lib/python3.6/site-packages'
