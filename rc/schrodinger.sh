@@ -20,6 +20,7 @@ unset_py3 () {
     unset SCHRODINGER_PYTHON3
 }
 
+RBT_PATH=/usr/local/bin/rbt
 ############## Environment Setup
 # Set variables
 set_schrodinger_v 2018-2
@@ -79,7 +80,7 @@ testdinger () {
           ;;
         r)
             # [r]epeat mode. Use arguments from previous run.
-            test_args=$old_test_args
+            test_args="$old_test_args --last-failed"
         ;;
         \?)
           echo "Invalid option: -$OPTARG" >&2
@@ -108,10 +109,10 @@ rbt () {
     branch=$(git branch | grep \* | cut -d ' ' -f2)
     rbt_id=$(grep "$repo:$branch" ~/.rbtids | cut -d":" -f3)
     if [ -z "$rbt_id" ]; then
-        rbt_id=$(/usr/local/bin/rbt post --open --bugs-closed $branch --summary $branch: | tee /dev/tty | egrep -o '[0-9]+' | head -1)
+        rbt_id=$($RBT_PATH post --open --bugs-closed $branch --summary $branch: | tee /dev/tty | egrep -o '[0-9]+' | head -1)
         echo -e "$repo:$branch:$rbt_id\n" >> ~/.rbtids
     else
-        /usr/local/bin/rbt post -r $rbt_id
+        $RBT_PATH post -r $rbt_id
     fi
 }
 
@@ -132,12 +133,11 @@ oyapf () {
 
 
 
-alias build_scripts='cd $SCHRODINGER/mmshare-v*/python/scripts/ && make install ; cd -'
-alias pstu='build_scripts && $SCHRODINGER/utilities/py.test $SCHRODINGER/mmshare-v*/python/scripts/test/params_stu'
 alias bashrc='vim ~/.bashrc'
 alias vimrc='vim ~/.vimrc'
 alias bash_profile='vim ~/.bash_profile'
 alias reload='source ~/.bashrc'
+alias schi='schrun ipython'
 
 export SCHRODINGER_PYTHON3='TRUE'
-export PYTHONPATH=$SCHRODINGER'/internal/lib/python3.6/site-packages'
+#export PYTHONPATH=$SCHRODINGER'/internal/lib/python3.6/site-packages'

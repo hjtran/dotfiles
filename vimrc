@@ -131,6 +131,7 @@ map <S-k> <Nop>
 cnoreabbrev X x
 
 " Jedi rebindings
+let g:jedi#auto_initialization = 0
 let g:jedi#goto_command = ""
 let g:jedi#goto_assignments_command = ""
 let g:jedi#goto_definitions_command = ""
@@ -146,6 +147,7 @@ nmap <Space> <Plug>(easymotion-prefix)
 """ Plugin settings {{{
 
 " syntastic settings
+let $PATH = $PATH.':/Users/jtran/.vim/bundle/syntastic/syntax_checkers/'
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
@@ -162,13 +164,14 @@ let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
 
 " jedi settings
-autocmd FileType python setlocal completeopt-=preview
-let g:jedi#smart_auto_mappings = 0
+"autocmd FileType python setlocal completeopt-=preview
+"let g:jedi#smart_auto_mappings = 0
 
 "let g:completor_python_binary='/scr/jtran/builds/2018-1/build/buildvenv/279714d/bin/python'
 
 " }}}}
 """ Schrodinger settings {{{
+set grepprg=rg\ --vimgrep
 if !empty($SCHRODINGER_SRC)
     function! OpenGrokFile()
         let fname=expand('%:p')
@@ -265,6 +268,30 @@ function! PyDefs()
     endfor
     return defs
 endfun
+
+function! Mirror(dict)
+    for [key, value] in items(a:dict)
+        let a:dict[value] = key
+    endfor
+    return a:dict
+endfunction
+
+function! S(number)
+    return submatch(a:number)
+endfunction
+function! SwapWords(dict, ...)
+    let words = keys(a:dict) + values(a:dict)
+    let words = map(words, 'escape(v:val, "|")')
+    if(a:0 == 1)
+        let delimiter = a:1
+    else
+        let delimiter = '/'
+    endif
+    let pattern = '\v(' . join(words, '|') . ')'
+    exe '%s' . delimiter . pattern . delimiter
+        \ . '\=' . string(Mirror(a:dict)) . '[S(0)]'
+        \ . delimiter . 'g'
+endfunction
 
 " }}}
 " vim:foldmethod=marker:foldlevel=0
